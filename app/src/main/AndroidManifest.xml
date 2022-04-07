@@ -170,6 +170,10 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
+            android:theme="@style/FilePickerTheme" />
+        <activity
+            android:name=".MainActivity2"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/FilePickerTheme"
             android:exported="true">
             <intent-filter>

@@ -167,6 +167,7 @@ public abstract class AbstractFilePickerFragment<T> extends Fragment
         // Skip loading anything if not initialized yet
         if (getContext() == null)
             return;
+        android.util.Log.w("mpv", "refresh to " + nextPath);
         isLoading = true;
         if (hasPermission(nextPath)) {
             LoaderManager.getInstance(this)

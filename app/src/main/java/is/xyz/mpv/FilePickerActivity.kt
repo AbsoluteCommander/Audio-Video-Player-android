@@ -1,7 +1,9 @@
 package `is`.xyz.mpv
 
 import `is`.xyz.filepicker.AbstractFilePickerFragment
+import `is`.xyz.filepicker.DocumentPickerFragment
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment.getExternalStorageDirectory
 import android.preference.PreferenceManager
@@ -11,6 +13,7 @@ import android.view.View
 import android.view.Window
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
@@ -35,6 +38,12 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
             }
             FILE_PICKER -> {
                 initFilePicker()
+                return
+            }
+            OPEN_DOC_TREE -> {
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    it.data?.data?.let { root -> initDocPicker(root) }
+                }.launch(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE))
                 return
             }
         }
@@ -79,6 +88,17 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
         }
 
         // Open the curtains
+        findViewById<View>(android.R.id.content).visibility = View.VISIBLE
+    }
+
+    private fun initDocPicker(root: Uri) {
+        Log.v(TAG, "FilePickerActivity: showing document picker at '$root'")
+        val fragment = MPVDocumentPickerFragment(root)
+        with (supportFragmentManager.beginTransaction()) {
+            add(R.id.file_picker_fragment, fragment, null)
+            commit()
+        }
+
         findViewById<View>(android.R.id.content).visibility = View.VISIBLE
     }
 
@@ -127,5 +147,6 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
         // values for "skip" in intent
         const val URL_DIALOG = 0
         const val FILE_PICKER = 1
+        const val OPEN_DOC_TREE = 2
     }
 }
