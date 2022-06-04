@@ -47,6 +47,7 @@ class MainFragment : Fragment(R.layout.fragment_example) {
             }
         }
         binding.button3.setOnClickListener {
+            // maybe keeping it as an activity isn't so bad?
             startActivity(Intent(context, MainActivity::class.java))
             activity?.finish()
         }
