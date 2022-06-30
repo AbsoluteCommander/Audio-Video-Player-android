@@ -4,7 +4,6 @@ import `is`.xyz.mpv.config.SettingsActivity
 import `is`.xyz.mpv.databinding.FragmentExampleBinding
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
@@ -27,7 +26,7 @@ class MainFragment : Fragment(R.layout.fragment_example) {
 
         binding.button1.setOnClickListener {
             val i = Intent(context, FilePickerActivity::class.java)
-            i.putExtra("skip", FilePickerActivity.OPEN_DOC_TREE)
+            i.putExtra("skip", FilePickerActivity.DOC_PICKER)
             startActivity(i)
         }
         binding.button2.setOnClickListener {

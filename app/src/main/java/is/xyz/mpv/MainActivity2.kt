@@ -50,6 +50,16 @@ class MainActivity2 : AppCompatActivity(R.layout.activity_main2) {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         //menuInflater.inflate(R.menu.menu_main, menu)
         menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, "activity")
+
+        /*
+        How to fix this mess:
+        - make FilePickerActivity generic (doc vs file) and so it can replace MainActivity
+        - MainFragment just launches the activity to do stuff and plays the picked file
+        - discard MainFragment2 and MainActivity
+        - ???
+        - profit
+         */
+
         return true
     }
 

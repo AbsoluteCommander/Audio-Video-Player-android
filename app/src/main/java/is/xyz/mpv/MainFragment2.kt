@@ -49,7 +49,6 @@ class MainFragment2 : Fragment(R.layout.activity_main), AbstractFilePickerFragme
         }
     }
 
-    @Deprecated("")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
