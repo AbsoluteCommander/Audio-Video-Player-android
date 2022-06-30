@@ -16,9 +16,6 @@ public class MPVFilePickerFragment extends FilePickerFragment {
     private File rootPath = new File("/");
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {}
-
-    @Override
     public void onClickCheckable(@NonNull View v, @NonNull FileViewHolder vh) {
         mListener.onFilePicked(vh.file);
     }

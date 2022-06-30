@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import is.xyz.filepicker.AbstractFilePickerFragment;
 import is.xyz.filepicker.DocumentPickerFragment;
 
 public class MPVDocumentPickerFragment extends DocumentPickerFragment {
@@ -16,9 +17,16 @@ public class MPVDocumentPickerFragment extends DocumentPickerFragment {
 
     @Override
     public void onClickCheckable(@NonNull View view, @NonNull FileViewHolder vh) {
-        Intent i = new Intent(Intent.ACTION_VIEW, vh.file, getActivity(), MPVActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-        getActivity().finish();
+        mListener.onDocumentPicked(vh.file, false);
+    }
+
+    @Override
+    public boolean onLongClickCheckable(@NonNull View view, @NonNull DirViewHolder vh) {
+        mListener.onDocumentPicked(vh.file, true);
+        return true;
+    }
+
+    public boolean isBackTop() {
+        return mCurrentPath.equals(getRoot());
     }
 }

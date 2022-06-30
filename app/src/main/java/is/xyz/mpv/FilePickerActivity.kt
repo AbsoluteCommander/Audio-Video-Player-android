@@ -47,7 +47,7 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
         setContentView(R.layout.activity_filepicker)
-        supportActionBar?.title = "TODO"
+        supportActionBar?.title = ""
 
         // With the app acting as if the navbar is hidden, we need to
         // account for it outselves. We want the recycler to directly
@@ -76,10 +76,8 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
                 return
             }
             DOC_PICKER -> {
-                //registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                //    it.data?.data?.let { root -> initDocPicker(root) }
-                //}.launch(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE))
-                initDocPicker(Uri.parse(intent.getStringExtra("root")!!))
+                val root = Uri.parse(intent.getStringExtra("root")!!)
+                initDocPicker(root)
                 return
             }
         }
@@ -95,6 +93,7 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
             askDialog.dismiss()
             showUrlDialog()
         }
+        // TODO: add pick document (not tree!) here
 
         askDialog = with (AlertDialog.Builder(this)) {
             setTitle(intent.getStringExtra("title"))
@@ -289,6 +288,18 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
     }
 
     override fun onBackPressed() {
+        fragment?.apply {
+            if (!isBackTop) {
+                goUp()
+                return
+            }
+        }
+        fragment2?.apply {
+            if (!isBackTop) {
+                goUp()
+                return
+            }
+        }
         finishWithResult(RESULT_CANCELED)
     }
 
@@ -308,13 +319,18 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
 
     override fun onDirPicked(dir: File) = finishWithResult(RESULT_OK, dir.absolutePath)
 
+    override fun onDocumentPicked(uri: Uri, isDir: Boolean) {
+        if (!isDir)
+            finishWithResult(RESULT_OK, uri.toString())
+    }
+
     override fun onCancelled() = finishWithResult(RESULT_CANCELED)
 
     companion object {
         private const val TAG = "mpv"
 
         // legacy leftover
-        private const val PREF_PREFIX = "is.xyz.MainActivity_"
+        private const val PREF_PREFIX = "MainActivity_"
 
         private val MEDIA_FILE_FILTER = FileFilter { file ->
             if (file.isDirectory) {

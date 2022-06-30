@@ -38,6 +38,10 @@ class MainActivity2 : AppCompatActivity(R.layout.activity_main2) {
 
         android.util.Log.w(TAG, "${javaClass.name} created")
 
+        // The original plan was to have the file/doc picker live as fragments
+        // under here but that requires refactoring I'm really not willing to figure out now.
+        // ~sfan5, 2022-06-30
+
         if (savedInstanceState == null) {
             with (supportFragmentManager.beginTransaction()) {
                 setReorderingAllowed(true)
@@ -45,26 +49,6 @@ class MainActivity2 : AppCompatActivity(R.layout.activity_main2) {
                 commit()
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        //menuInflater.inflate(R.menu.menu_main, menu)
-        menu?.add(Menu.NONE, Menu.NONE, Menu.NONE, "activity")
-
-        /*
-        How to fix this mess:
-        - make FilePickerActivity generic (doc vs file) and so it can replace MainActivity
-        - MainFragment just launches the activity to do stuff and plays the picked file
-        - discard MainFragment2 and MainActivity
-        - ???
-        - profit
-         */
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return false
     }
 
     companion object {

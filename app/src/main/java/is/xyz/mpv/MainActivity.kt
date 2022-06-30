@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 
 import `is`.xyz.filepicker.AbstractFilePickerFragment
 import `is`.xyz.mpv.config.SettingsActivity
+import android.net.Uri
 
 import java.io.File
 import java.io.FileFilter
@@ -230,8 +231,9 @@ class MainActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFilePicke
         playFile(dir.absolutePath)
     }
 
-    override fun onCancelled() {
-    }
+    override fun onCancelled() {}
+
+    override fun onDocumentPicked(uri: Uri, isDir: Boolean) {}
 
     override fun onBackPressed() {
         if (fragment!!.isBackTop) {

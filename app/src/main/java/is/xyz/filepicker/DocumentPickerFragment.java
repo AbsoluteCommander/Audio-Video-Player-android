@@ -14,17 +14,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * An implementation of the picker that operates on a document tree.
+ *
+ * See also:
+ * - https://developer.android.com/training/data-storage/shared/documents-files
+ * - https://developer.android.com/reference/android/provider/DocumentsContract.Document#MIME_TYPE_DIR
+ * - https://github.com/android/storage-samples/blob/main/ActionOpenDocumentTree/app/src/main/java/com/example/android/ktfiles/DirectoryFragmentViewModel.kt#L42
+ * - https://github.com/googlearchive/android-DirectorySelection/blob/master/Application/src/main/java/com/example/android/directoryselection/DirectorySelectionFragment.java
+ */
 public class DocumentPickerFragment extends AbstractFilePickerFragment<Uri> {
     private final @NonNull Uri mRoot;
     // The structure of the file picker assumes that only the file URIs matter and you can
     // grab additional info for free afterwards. This is not the case with the documents API so we
     // have to work around it.
     HashMap<Uri, Document> mLastRead;
-
-    // https://developer.android.com/training/data-storage/shared/documents-files?hl=EN
-    // https://developer.android.com/reference/android/provider/DocumentsContract.Document#MIME_TYPE_DIR
-    // https://github.com/android/storage-samples/blob/main/ActionOpenDocumentTree/app/src/main/java/com/example/android/ktfiles/DirectoryFragmentViewModel.kt#L42
-    // https://github.com/googlearchive/android-DirectorySelection/blob/master/Application/src/main/java/com/example/android/directoryselection/DirectorySelectionFragment.java
 
     public DocumentPickerFragment(@NonNull Uri root) {
         mRoot = root;
