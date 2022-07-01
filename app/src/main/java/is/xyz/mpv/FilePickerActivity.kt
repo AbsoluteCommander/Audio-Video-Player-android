@@ -1,7 +1,6 @@
 package `is`.xyz.mpv
 
 import `is`.xyz.filepicker.AbstractFilePickerFragment
-import `is`.xyz.mpv.config.SettingsActivity
 import android.Manifest
 import android.app.UiModeManager
 import android.content.Intent
@@ -11,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Environment.getExternalStorageDirectory
 import android.preference.PreferenceManager
 import android.text.InputType
 import android.util.Log
@@ -54,6 +52,7 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
         // take the system UI padding so that we can tell it to draw
         // into the padded area while still respecting the padding for
         // input.
+        // FIXME this doesn't work anymore!
         val container = findViewById<FragmentContainerView>(R.id.file_picker_fragment)
         container.setOnApplyWindowInsetsListener { view, insets ->
             view.setPadding(insets.systemWindowInsetLeft,
@@ -62,9 +61,6 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
                 insets.systemWindowInsetBottom)
             insets
         }
-
-        // Hide everything for now
-        findViewById<View>(android.R.id.content).visibility = View.GONE
 
         when (intent.getIntExtra("skip", -1)) {
             URL_DIALOG -> {
@@ -93,7 +89,6 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
             askDialog.dismiss()
             showUrlDialog()
         }
-        // TODO: add pick document (not tree!) here
 
         askDialog = with (AlertDialog.Builder(this)) {
             setTitle(intent.getStringExtra("title"))
@@ -212,7 +207,7 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
             val vol = vols.find { defaultPath.startsWith(it.path) }
             if (vol == null) {
                 // looks like it wasn't
-                Log.w(TAG, "default path set to $defaultPath but no such storage volume")
+                Log.w(TAG, "default path set to \"$defaultPath\" but no such storage volume")
                 with (fragment!!) {
                     root = vols.first().path
                     goToDir(vols.first().path)
@@ -227,9 +222,6 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
             // Old device: go to preferred path but don't restrict root
             fragment!!.goToDir(defaultPath)
         }
-
-        // Open the curtains
-        findViewById<View>(android.R.id.content).visibility = View.VISIBLE
     }
 
     override fun dispatchKeyEvent(ev: KeyEvent?): Boolean {
@@ -260,14 +252,12 @@ class FilePickerActivity : AppCompatActivity(), AbstractFilePickerFragment.OnFil
     }
 
     private fun initDocPicker(root: Uri) {
-        Log.v(TAG, "FilePickerActivity: showing document picker at $root")
+        Log.v(TAG, "FilePickerActivity: showing document picker at \"$root\"")
         fragment2 = MPVDocumentPickerFragment(root)
         with (supportFragmentManager.beginTransaction()) {
             add(R.id.file_picker_fragment, fragment2!!, null)
             commit()
         }
-
-        findViewById<View>(android.R.id.content).visibility = View.VISIBLE
     }
 
     private fun showUrlDialog() {

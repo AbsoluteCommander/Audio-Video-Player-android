@@ -42,9 +42,8 @@ public class DocumentPickerFragment extends AbstractFilePickerFragment<Uri> {
             return doc.isDir;
         }
 
-        android.util.Log.w("mpv", "uncached isDir " + path);
-
-        final ContentResolver contentResolver = getActivity().getContentResolver();
+        // retrieve the data uncached (not supposed to happen)
+        final ContentResolver contentResolver = requireContext().getContentResolver();
         final String[] cols = new String[] { DocumentsContract.Document.COLUMN_MIME_TYPE };
         Cursor c = contentResolver.query(path, cols, null, null, null, null);
         boolean ret = false;
@@ -66,11 +65,9 @@ public class DocumentPickerFragment extends AbstractFilePickerFragment<Uri> {
             return doc.displayName;
         }
 
-        android.util.Log.w("mpv", "uncached getName " + path);
-
-        final ContentResolver contentResolver = getActivity().getContentResolver();
+        // retrieve the data uncached (not supposed to happen)
+        final ContentResolver contentResolver = requireContext().getContentResolver();
         final String[] cols = new String[] { DocumentsContract.Document.COLUMN_DISPLAY_NAME };
-        android.util.Log.w("mpv", "query(name) " + path);
         Cursor c = contentResolver.query(path, cols, null, null, null, null);
         String ret = "";
         if (c == null)
@@ -134,21 +131,19 @@ public class DocumentPickerFragment extends AbstractFilePickerFragment<Uri> {
                 DocumentsContract.Document.COLUMN_MIME_TYPE,
                 DocumentsContract.Document.COLUMN_DISPLAY_NAME,
         };
-        return new AsyncTaskLoader<List<Uri>>(getActivity()) {
+        return new AsyncTaskLoader<List<Uri>>(requireContext()) {
             @Override
             public List<Uri> loadInBackground() {
                 final ContentResolver contentResolver = getContext().getContentResolver();
-                android.util.Log.w("mpv", "query " + childUri);
                 Cursor c = contentResolver.query(childUri, cols, null, null, null, null);
                 if (c == null) {
-                    android.util.Log.w("mpv", "cursor is null!");
                     return new ArrayList<>(0);
                 }
 
                 ArrayList<Document> files = new ArrayList<>();
                 final int i1 = c.getColumnIndex(cols[0]), i2 = c.getColumnIndex(cols[1]), i3 = c.getColumnIndex(cols[2]);
                 while (c.moveToNext()) {
-                    // TODO should support file filter equivalent here
+                    // TODO later: support FileFilter equivalent here
                     files.add(new Document(
                             DocumentsContract.buildDocumentUriUsingTree(root, c.getString(i1)),
                             currentPath,
@@ -157,7 +152,6 @@ public class DocumentPickerFragment extends AbstractFilePickerFragment<Uri> {
                     ));
                 }
                 c.close();
-                android.util.Log.w("mpv", "n = " + files.size());
 
                 Collections.sort(files);
 

@@ -1,15 +1,13 @@
 package `is`.xyz.mpv
 
 import `is`.xyz.mpv.config.SettingsActivity
-import `is`.xyz.mpv.databinding.FragmentExampleBinding
+import `is`.xyz.mpv.databinding.FragmentMainScreenBinding
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
@@ -17,8 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 
-class MainFragment : Fragment(R.layout.fragment_example) {
-    private lateinit var binding: FragmentExampleBinding
+class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
+    private lateinit var binding: FragmentMainScreenBinding
 
     private lateinit var documentTreeOpener: ActivityResultLauncher<Intent>
     private lateinit var filePickerLauncher: ActivityResultLauncher<Intent>
@@ -46,13 +44,12 @@ class MainFragment : Fragment(R.layout.fragment_example) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentExampleBinding.bind(view)
-        Log.w(TAG, "${javaClass.name} created")
+        binding = FragmentMainScreenBinding.bind(view)
 
-        binding.button1.setOnClickListener {
+        binding.docBtn.setOnClickListener {
             documentTreeOpener.launch(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE))
         }
-        binding.button2.setOnClickListener {
+        binding.urlBtn.setOnClickListener {
             val input = EditText(context)
             input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
 
@@ -68,12 +65,12 @@ class MainFragment : Fragment(R.layout.fragment_example) {
                 show()
             }
         }
-        binding.button3.setOnClickListener {
+        binding.filepickerBtn.setOnClickListener {
             val i = Intent(context, FilePickerActivity::class.java)
             i.putExtra("skip", FilePickerActivity.FILE_PICKER)
             filePickerLauncher.launch(i)
         }
-        binding.button4.setOnClickListener {
+        binding.settingsBtn.setOnClickListener {
             startActivity(Intent(context, SettingsActivity::class.java))
         }
     }
